@@ -1,0 +1,288 @@
+#include <bits/stdc++.h>
+#include<conio.h>
+#include<fstream>
+using namespace std;
+
+class student
+{
+protected:
+	int roll;
+	string name;
+	int cpp;
+	int daa;
+	int de;
+	int dm;
+	int eco;
+	int iscp;
+	int ises;
+	int tot;
+	float per;
+public:
+	void input()
+	{
+		cout<<"           \n                                               Enter student details"<<endl<<endl;
+		cout<<"Enter student name:";
+		cin>>name;
+		cout<<"Enter student roll no:";
+		cin>>roll;
+		cout<<"Enter marks of C++ (for 100):";
+		cin>>cpp;
+		cout<<"Enter marks of DAA (for 100):";
+		cin>>daa;
+		cout<<"Enter marks of DE  (for 100):";
+		cin>>de;
+		cout<<"Enter marks of DM  (for 100):";
+		cin>>dm;
+		cout<<"Enter marks of ECO (for 100):";
+		cin>>eco;
+		cout<<"Enter marks of ISES(for 100):";
+		cin>>ises;
+		cout<<"Enter marks of ISCP(for 100):";
+		cin>>iscp;
+		tot=cpp+daa+de+dm+eco+ises+iscp;
+		per=((float)tot/(float)700)*100;
+		ofstream myfile;
+		myfile.open("Marklist.txt");
+		myfile<<roll<<" "<<name<<" "<<cpp<<" "<<daa<<" "<<de<<" "<<dm;
+		myfile<<" "<<eco<<" "<<ises<<" "<<iscp<<" "<<tot<<" "<<per<<"\n";
+		cout<<"File is updated";
+		myfile.close();
+	}
+	void search(int key)
+	{
+		ifstream myFile;
+		myFile.open("Marklist.txt");
+		int r,mcpp,mdaa,mde,mdm,meco,mises,miscp,mtot;
+		string Name;
+		float mper;
+		bool isfound=false;
+		while(myFile>>r>>Name>>mcpp>>mdaa>>mde>>mdm>>meco>>mises>>miscp>>mtot>>mper)
+		{
+			if(r==key)
+			{
+				isfound=true;
+				break;
+			}
+		}
+		if(isfound==false)
+			cout<<"Student record Not found"<<endl;
+		else
+		{
+			cout<<"Student record"<<endl;
+			cout<<"Roll no:"<<r<<endl;
+			cout<<"Name:"<<Name<<endl;
+			cout<<"Marks of DAA:"<<mdaa<<endl;
+			cout<<"Marks of DE:"<<mde<<endl;
+			cout<<"Marks of DM:"<<mdaa<<endl;
+			cout<<"Marks of ECO:"<<mdaa<<endl;
+			cout<<"Marks of C++:"<<mcpp<<endl;
+			cout<<"Marks of ISES:"<<mises<<endl;
+			cout<<"Marks of ISCP:"<<miscp<<endl;
+			cout<<"Total:"<<mtot<<endl;
+			cout<<"Percentage:"<<mper<<"%"<<endl;
+		}
+		myFile.close();
+	}
+	void findtopper()
+	{
+		ifstream fin;
+		fin.open("Marklist.txt");
+		struct top
+		{
+			int rol;
+			float per;
+		}x[60];
+		int r,mcpp,mdaa,mde,mdm,meco,mises,miscp,mtot,n=0;
+		string Name;
+		float mper;
+		while(fin>>r>>Name>>mcpp>>mdaa>>mde>>mdm>>meco>>mises>>miscp>>mtot>>mper)
+		{
+			x[n].rol=r;
+			x[n].per=mper;
+			n++;
+		}
+		for(int i=0;i<n-1;i++)
+		{
+			for(int j=0;j<n-i-1;j++)
+			{
+				if(x[j].per<x[j+1].per)
+				{
+					top temp=x[j];
+					x[j]=x[j+1];
+					x[j+1]=temp;
+				}
+			}
+		}
+		cout<<endl<<"Topper 1"<<endl;
+		search(x[0].rol);
+		cout<<endl<<"Topper 2"<<endl;
+		search(x[1].rol);
+		cout<<endl<<"Topper 3"<<endl;
+		search(x[2].rol);
+		fin.close();
+	}
+
+	void printall()
+	{
+		ifstream fin;
+		fin.open("Marklist.txt");
+		string line;
+		while(getline(fin,line))
+		{
+			cout<<line<<endl;
+		}
+		fin.close();
+	}
+	void deleterecord(int key)
+	{
+		ifstream fin;
+		ofstream fout;
+		fin.open("Marklist.txt");
+		fout.open("Demo.txt");
+		int r,mcpp,mdaa,mde,mdm,meco,mises,miscp,mtot;
+		string Name;
+		float mper;
+		while(fin>>r>>Name>>mcpp>>mdaa>>mde>>mdm>>meco>>mises>>miscp>>mtot>>mper)
+		{
+			if(r==key)
+			{
+				continue;
+			}
+			else
+			{
+				fout<<r<<" "<<Name<<" "<<mcpp<<" "<<mdaa<<" "<<mde<<" "<<mdm<<" "<<meco<<" ";
+				fout<<mises<<" "<<miscp<<" "<<mtot<<" "<<mper<<"\n";
+			}
+		}
+		fin.close();
+		fout.close();
+		remove("Marklist.txt");
+		ofstream k;
+		k.open("Marklist.txt",ios::app);
+		ifstream l;
+		l.open("Demo.txt");
+		string line;
+		while(getline(l,line))
+		{
+			k<<line<<endl;
+		}
+		k.close();
+		l.close();
+		remove("Demo.txt");
+	}
+	void modifyrecord(int key)
+	{
+		ifstream fin;
+		ofstream fout;
+		fin.open("Marklist.txt");
+		fout.open("Demo.txt");
+		int r,mcpp,mdaa,mde,mdm,meco,mises,miscp,mtot;
+		string Name;
+		float mper;
+		while(fin>>r>>Name>>mcpp>>mdaa>>mde>>mdm>>meco>>mises>>miscp>>mtot>>mper)
+		{
+			if(r==key)
+			{
+				cout<<"Modify the details\n";
+				cout<<"Enter student name :";
+				getline(cin,Name);
+				cout<<"Enter student roll no:";
+				cin>>r;
+				cout<<"Enter marks of C++:";
+				cin>>mcpp;
+				cout<<"Enter marks of Daa:";
+				cin>>mdaa;
+				cout<<"Enter marks of DE:";
+				cin>>mde;
+				cout<<"Enter marks of DM:";
+				cin>>mdm;
+				cout<<"Enter marks of ECO:";
+				cin>>meco;
+				cout<<"Enter marks of ISES:";
+				cin>>mises;
+				cout<<"Enter marks of ISCP:";
+				cin>>miscp;
+				mtot=mcpp+mdaa+mde+mdm+meco+mises+miscp;
+				mper=((float)mtot/(float)35)*10;
+				fout<<r<<" "<<Name<<" "<<mcpp<<" "<<mdaa<<" "<<mde<<" "<<mdm;
+				fout<<" "<<meco<<" "<<mises<<" "<<miscp<<" "<<mtot<<" "<<mper<<"\n";
+				cout<<"File is updated";
+
+			}
+			else
+			{
+				fout<<r<<" "<<Name<<" "<<mcpp<<" "<<mdaa<<" "<<mde<<" "<<mdm<<" "<<meco<<" ";
+				fout<<mises<<" "<<miscp<<" "<<mtot<<" "<<mper<<"\n";
+			}
+		}
+		fin.close();
+		fout.close();
+		remove("Marklist.txt");
+		ofstream k;
+		k.open("Marklist.txt");
+		ifstream l;
+		l.open("Demo.txt");
+		string line;
+		while(getline(l,line))
+		{
+			k<<line<<endl;
+		}
+		k.close();
+		l.close();
+		remove("Demo.txt");
+	}
+
+};
+
+int main()
+{
+	int choice,key;
+	student a;
+	cout<<"                                ================================\n                                Student Report mangement system\n                                ================================"<<endl;
+	while(true)
+	{
+		cout<<"\n                                     SELECT AN OPERATION"<<endl;
+		cout<<"1. Add a new student record."<<endl;
+		cout<<"2. Modify a student record."<<endl;
+		cout<<"3. Delete a student record."<<endl;
+		cout<<"4. Display a particular student record."<<endl;
+		cout<<"5. Display all student records."<<endl;
+		cout<<"6. Display toppers(Top 3)."<<endl<<endl;
+		cout<<"Please enter other than(1-6) to exit"<<endl<<endl;
+		cout<<"Enter the choice --->";
+		cin>>choice;
+		system("cls");
+		switch(choice)
+		{
+			case 1:
+				a.input();
+				break;
+			case 2:
+				cout<<"Enter Reg no to modify : ";
+				cin>>key;
+				a.modifyrecord(key);
+				break;
+			case 3:
+				cout<<"Enter Reg no to delete : ";
+				cin>>key;
+				a.deleterecord(key);
+				break;
+			case 4:
+				cout<<"Enter Reg no to search : ";
+				cin>>key;
+				a.search(key);
+				break;
+			case 5:
+				a.printall();
+				break;
+			case 6:
+				a.findtopper();
+				break;
+			default:
+				return 0;
+		}
+		getch();
+		system("CLS");
+	}
+	
+}
